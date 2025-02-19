@@ -8,6 +8,36 @@
     >
 </p-message>
 
+
+<p-message 
+    *ngIf="showUpdateMessage" 
+    severity="success" 
+    text= "The Contact has been successfully updated" 
+    class="custom-message"
+    >
+</p-message>
+
+
+<p-message 
+    *ngIf="showOwnershipMessage" 
+    severity="warn" 
+    text= "You cannot update this contact since you are not owner" 
+    class="custom-message"
+    >
+</p-message>
+
+<p-message 
+    *ngIf="showErrorMessage" 
+    severity="error" 
+    text= "an Error has occured" 
+    class="custom-message"
+    >
+</p-message>
+
+<div class="search-bar">
+    <input type="text" [(ngModel)]="searchTerm" (ngModelChange)= "filterContacts()" placeholder="Search by First Name" class="form-control" />
+</div>
+
 <table class="table table-striped table-hover border rounded-lg shadow-sm">
     <thead class="bg-primary text-white">
         <tr>
@@ -81,7 +111,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let contact of contacts">
+        <tr *ngFor="let contact of filteredContacts">
             <td>{{contact.firstName}}</td>
             <td>{{contact.lastName}}</td>
             <td>{{contact.company}}</td>

@@ -25,6 +25,12 @@ export class ContactComponent implements OnInit {
 
   showCreationMessage: boolean = false;
 
+  showUpdateMessage: boolean = false;
+
+  showOwnershipMessage: boolean = false;
+
+  showErrorMessage: boolean = false;
+
   textMessage: string = "";
 
 
@@ -40,6 +46,29 @@ export class ContactComponent implements OnInit {
   }
 
   ascendingSortOrder: boolean = true;
+
+  searchTerm: string = "";
+
+  filteredContacts: Contact[] = [];
+
+  isSubString(s1: string, s2: string){
+    for (let i = 0 ; i < s1.length ; i ++){
+      if (s1[i]!=s2[i]){
+        return false;
+      }
+    }
+    return true;
+  }
+
+  filterContacts(){
+    if (this.searchTerm!=""){
+      this.filteredContacts = this.contacts.filter(contact => this.isSubString(this.searchTerm.toLocaleLowerCase(), contact.firstName.toLowerCase()));
+    }
+    else {
+      this.filteredContacts = this.contacts;
+    }
+  }
+
 
   sortContacts(contacts: Contact[], column: string): Contact[] {
 
@@ -195,7 +224,9 @@ export class ContactComponent implements OnInit {
           state: response.state
         }
         this.contacts.push(newContact);
+        this.showCreationMessage = true;
         setTimeout(() => {
+          this.showCreationMessage = false;
         }, 3000);
 
       },
@@ -236,10 +267,18 @@ export class ContactComponent implements OnInit {
             this.contacts[index].city = this.contactEditForm.value.city;
             this.contacts[index].zipCode = this.contactEditForm.value.zipCode;
             this.contacts[index].state = this.contactEditForm.value.state;
+            this.showUpdateMessage = true;
+            setTimeout(() => {
+              this.showUpdateMessage = false;
+            }, 3000);
           }
         }
         else {
           alert("You cannot update the contact since you are not the owner !!!");
+          this.showOwnershipMessage= true;
+          setTimeout(() => {
+            this.showOwnershipMessage = false;
+          }, 3000);
         }
       },
       error => {
@@ -330,6 +369,7 @@ export class ContactComponent implements OnInit {
     .subscribe(
       response => {
         this.contacts = response;
+        this.filteredContacts = this.contacts;
       },
       error => {
         console.log("error has occured"+error);

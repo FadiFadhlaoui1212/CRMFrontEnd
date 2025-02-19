@@ -1,3 +1,22 @@
+<p-message 
+    *ngIf="showSuccessfulLoginMessage" 
+    severity="success" 
+    text= "The Contact has been successfully added" 
+    class="custom-message"
+    >
+</p-message>
+
+
+<p-message 
+    *ngIf="showLoginErrorMessage" 
+    severity="error" 
+    text= "Email & Password do not match" 
+    class="custom-message"
+    >
+</p-message>
+
+
+
 <form [formGroup] = "loginForm" (ngSubmit) = "onSubmit()">
     <p>
         <label for = "email">Email</label>

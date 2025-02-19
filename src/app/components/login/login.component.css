@@ -84,3 +84,39 @@ button[type="submit"]:hover {
     text-decoration: underline;
 }
 
+.custom-message {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    opacity: 0;
+    transform: translateY(-10px);
+    animation: fadeIn 0.5s forwards, fadeOut 0.5s forwards 2.5s; /* Fade out after 2.5s */
+  }
+  
+  /* Fade In Animation */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Fade Out Animation */
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+  }
+  
+
+

@@ -12,6 +12,10 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
 
+  showSuccessfulLoginMessage: boolean = false;
+
+  showLoginErrorMessage: boolean = false;
+
 
   loginForm: FormGroup = new FormGroup({
     email: new FormControl(),
@@ -38,8 +42,16 @@ export class LoginComponent implements OnInit {
         localStorage.setItem("authToken", token);
         console.log(token);
         this.router.navigate(['/home']);
+        this.showSuccessfulLoginMessage= true;
+        setTimeout(() => {
+          this.showSuccessfulLoginMessage = false;
+        }, 3000);
       },
       error => {
+        this.showSuccessfulLoginMessage= true;
+        setTimeout(() => {
+          this.showSuccessfulLoginMessage = false;
+        }, 3000);
         console.log('Error creating user:', error);
       }
     )
