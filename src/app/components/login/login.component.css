@@ -1,0 +1,86 @@
+/* General body styling */
+body {
+    background: url('http://www.timurtek.com/wp-content/uploads/2014/10/form-bg.jpg') no-repeat center center fixed; 
+    background-size: cover;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    color: #333;
+}
+
+/* Form container styling */
+form {
+    background-color: rgba(255, 255, 255, 0.9); 
+    width: 400px; 
+    padding: 30px;
+    border-radius: 8px;
+    margin: 100px auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Input styling */
+input[type="text"], input[type="email"], input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    transition: border 0.3s ease;
+}
+
+input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus {
+    border: 1px solid #58bff6;
+    outline: none;
+    box-shadow: 0 0 5px rgba(88, 191, 246, 0.6);
+}
+
+/* Label styling */
+label {
+    font-size: 16px;
+    color: #555;
+    display: block;
+    margin-bottom: 8px;
+}
+
+/* Submit button styling */
+button[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    background-color: #58bff6;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #44aacc;
+}
+
+/* Optional: Responsive design for smaller screens */
+@media (max-width: 600px) {
+    form {
+        width: 90%;
+        margin: 20px auto;
+    }
+}
+
+.register-link {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.register-link a {
+    color: #007bff;  /* Use the primary theme color */
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease-in-out;
+}
+
+.register-link a:hover {
+    color: #0056b3; /* Darker shade on hover */
+    text-decoration: underline;
+}
+

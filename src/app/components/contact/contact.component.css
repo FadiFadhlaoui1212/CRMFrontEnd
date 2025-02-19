@@ -1,0 +1,280 @@
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #007bff;
+    color: white;
+}
+
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+
+/* Wrap text and icon inside header-content */
+.header-content {
+    display: flex;
+    align-items: center;  /* Vertically center the text and the icon */
+    justify-content: space-between;  /* Space out the text and the icon */
+}
+
+/* Style for the sorting button */
+.sort-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin-left: 5px;
+}
+
+.sort-button i {
+    font-size: 1.2em;
+}
+
+
+
+
+.contact-activity-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 150px;
+    margin-left: 10;
+}
+
+.nav-button {
+    background-color: #007bff;  /* Primary blue color */
+    color: white;
+    border: none;
+    border-radius: 8px;  /* Rounded corners for a button-like look */
+    padding: 15px;
+    text-align: center;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.nav-button:hover {
+    background-color: #0056b3;  /* Darker blue on hover */
+    transform: translateY(-2px);  /* Slight hover effect */
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+.nav-button:focus {
+    outline: none;
+}
+
+.p-dialog {
+    display: flex;
+    justify-content: flex-end; /* Align the content to the right */
+    position: relative;
+}
+
+.dialog-content {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 30px;
+}
+
+/* Styling the dialog header */
+.p-dialog .p-dialog-header {
+    background-color: #007bff; /* Blue background */
+    color: white; /* White text */
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 1rem;
+  }
+  
+  /* Dialog content padding */
+  .p-dialog .p-dialog-content {
+    padding: 2rem; /* More space for the form */
+  }
+  
+  /* Customize input fields */
+  .p-inputtext {
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    border: 1px solid #ccc;
+  }
+  
+  /* Button styling */
+  .p-button {
+    font-size: 1rem;
+    border-radius: 0.3rem;
+    padding: 0.5rem 1rem;
+  }
+  
+  /* Styling the cancel button */
+  .p-button[severity='secondary'] {
+    background-color: #f0f0f0;
+    color: #666;
+  }
+  
+  /* Hover effect for buttons */
+  .p-button:hover {
+    opacity: 0.9;
+  }
+  
+  /* Align the cancel and save buttons nicely at the bottom */
+  .p-dialog-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    padding: 1rem;
+  }
+  
+/* General body styling */
+body {
+    background: url('http://www.timurtek.com/wp-content/uploads/2014/10/form-bg.jpg') no-repeat center center fixed; 
+    background-size: cover;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    color: #333;
+}
+
+/* Form container styling (for dialog) */
+form {
+    background-color: rgba(255, 255, 255, 0.9);
+    width: 500px; /* Adjusted width for dialog */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Two columns layout */
+    gap: 15px;
+    position: absolute; /* Position it absolutely inside the dialog */
+    right: 100px;    
+    gap: 15px;
+    top: 0; /* Align to the top */
+    margin: 20px 0; /* Optional margin to avoid hitting the edges */
+}
+
+/* Input styling */
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 10px; /* Slightly reduced padding */
+    margin: 8px 0; /* Adjusted margin */
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 14px; /* Slightly smaller font size */
+    transition: border 0.3s ease;
+}
+
+/* Ensure inputs on the second line take full width if there's only one item */
+form > input:nth-child(odd) {
+    grid-column: span 2; /* This makes the input on the third line span two columns */
+}
+
+input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus {
+    border: 1px solid #58bff6;
+    outline: none;
+    box-shadow: 0 0 5px rgba(88, 191, 246, 0.6);
+}
+
+/* Label styling */
+label {
+    font-size: 14px; /* Smaller font size */
+    color: #555;
+    display: block;
+    margin-bottom: 6px; /* Adjusted margin */
+}
+
+/* Submit button styling */
+button[type="submit"] {
+    width: 100%;
+    padding: 10px; /* Reduced padding */
+    background-color: #58bff6;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 14px; /* Slightly smaller font size */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+
+button[type="submit"]:hover {
+    background-color: #44aacc;
+}
+
+@media (max-width: 600px) {
+    form {
+        width: 90%;
+        margin: 20px auto;
+    }
+    form {
+        grid-template-columns: 1fr; /* One column layout on small screens */
+    }
+}
+.country-item {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Space between flag and text */
+}
+
+.flag-icon {
+    width: 20px;
+    height: 15px;
+    border-radius: 3px; /* Slightly rounded edges */
+    object-fit: cover;
+}
+
+.space-right {
+    margin-right: 8px;  /* Adds space between buttons */
+}
+
+.custom-btn {
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.custom-message {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    opacity: 0;
+    transform: translateY(-10px);
+    animation: fadeIn 0.5s forwards, fadeOut 0.5s forwards 2.5s; /* Fade out after 2.5s */
+  }
+  
+  /* Fade In Animation */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Fade Out Animation */
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+  }
+  

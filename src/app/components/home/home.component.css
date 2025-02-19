@@ -1,0 +1,87 @@
+/* Center everything */
+.home-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  position: relative;
+}
+
+/* Main Menu Button */
+.menu-button {
+  font-size: 3rem;
+  padding: 20px 50px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  position: relative;
+  z-index: 10;
+}
+
+.menu-button:hover {
+  background-color: #2980b9;
+  transform: scale(1.1);
+}
+
+/* Dropdown Container */
+.dropdown-menu {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 200px;
+  height: 200px;
+}
+
+/* Dropdown Buttons */
+.dropdown-button {
+  font-size: 2rem;
+  padding: 15px 40px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  position: absolute;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Contact button (plus loin à gauche et en haut) */
+.contacts {
+  background-color: #27ae60;
+  color: white;
+  top: -130px;  /* Augmenté */
+  left: -130px; /* Augmenté */
+  transform: rotate(-45deg) scale(0.8);
+}
+
+.contacts:hover {
+  background-color: #219150;
+  transform: rotate(-45deg) scale(1);
+}
+
+/* Activities button (plus loin à droite et en haut) */
+.activities {
+  background-color: #e67e22;
+  color: white;
+  top: -130px;   /* Augmenté */
+  right: -130px; /* Augmenté */
+  transform: rotate(45deg) scale(0.8);
+}
+
+.activities:hover {
+  background-color: #d35400;
+  transform: rotate(45deg) scale(1);
+}
+
+
+/* Show buttons when dropdown is visible */
+.dropdown-menu.visible .dropdown-button {
+  opacity: 1;
+  transform: scale(1);
+}

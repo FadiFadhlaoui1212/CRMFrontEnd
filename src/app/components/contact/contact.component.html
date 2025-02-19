@@ -1,0 +1,283 @@
+<p-button (onClick)="showCreationDialog()" label="Add a new Contact" class="p-button-rounded p-button-success"></p-button>
+<p></p>
+<p-message 
+    *ngIf="showCreationMessage" 
+    severity="success" 
+    text= "The Contact has been successfully added" 
+    class="custom-message"
+    >
+</p-message>
+
+<table class="table table-striped table-hover border rounded-lg shadow-sm">
+    <thead class="bg-primary text-white">
+        <tr>
+            <th>
+                <span>First Name</span>
+                <button class="sort-button" (click)="sortContacts(contacts, 'firstName')">
+                    <i class="pi pi-sort-alt"></i>
+                </button>
+            </th>
+            <th>
+                <span>Last Name</span>
+                <button class="sort-button" (click)="sortContacts(contacts, 'lastName')">
+                    <i class="pi pi-sort-alt"></i>
+                </button>
+            </th>
+            <th>
+                <span>Company</span>
+                <button class="sort-button" (click)="sortContacts(contacts, 'company')">
+                    <i class="pi pi-sort-alt"></i>
+                </button>
+            </th>
+            <th>
+                <span>Contact Owner</span>
+                <button class="sort-button" (click)="sortContacts(contacts, 'user')">
+                    <i class="pi pi-sort-alt"></i>
+                </button>
+            </th>
+            <th>
+                <span>Phone Number</span>
+                <button class="sort-button" (click)="sortContacts(contacts, 'phoneNumber')">
+                    <i class="pi pi-sort-alt"></i>
+                </button>
+            </th>
+            <th>
+                <span>Job Title</span>
+                <button class="sort-button" (click)="sortContacts(contacts, 'titleEnum')">
+                    <i class="pi pi-sort-alt"></i>
+                </button>
+            </th>
+            <th>
+                <span>Address</span>
+                <button class="sort-button" (click)="sortContacts(contacts, 'address')">
+                    <i class="pi pi-sort-alt"></i>
+                </button>
+            </th>
+            <th>
+                <span>Country</span>
+                <button class="sort-button" (click)="sortContacts(contacts, 'country')">
+                    <i class="pi pi-sort-alt"></i>
+                </button>
+            </th>
+            <th>
+                <span>City</span>
+                <button class="sort-button" (click)="sortContacts(contacts, 'city')">
+                    <i class="pi pi-sort-alt"></i>
+                </button>
+            </th>
+            <th>
+                <span>Zip Code</span>
+                <button class="sort-button" (click)="sortContacts(contacts, 'zipCode')">
+                    <i class="pi pi-sort-alt"></i>
+                </button>
+            </th>
+            <th>
+                <span>State</span>
+                <button class="sort-button" (click)="sortContacts(contacts, 'state')">
+                    <i class="pi pi-sort-alt"></i>
+                </button>
+            </th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let contact of contacts">
+            <td>{{contact.firstName}}</td>
+            <td>{{contact.lastName}}</td>
+            <td>{{contact.company}}</td>
+            <td>{{contact.user.firstname}} {{contact.user.lastname}}</td>
+            <td>{{contact.phoneNumber}}</td>
+            <td>{{contact.titleEnum}}</td>
+            <td>{{contact.address}}</td>
+            <td>{{contact.country}}</td>
+            <td>{{contact.city}}</td>
+            <td>{{contact.zipCode}}</td>
+            <td>{{contact.state}}</td>
+            <td>
+                <!-- Edit Button (Circular) -->
+                <button pButton class="p-button p-button-rounded p-button-warning p-button-sm custom-btn space-right" (click)="showEditDialog(contact)">
+                    <i class="pi pi-pencil"></i>
+                </button>
+            
+                <!-- Delete Button (Circular) -->
+                <button pButton class="p-button p-button-rounded p-button-danger p-button-sm custom-btn" (click)="deleteContact(contact.id)">
+                    <i class="pi pi-trash"></i>
+                </button>
+            </td>
+            
+        </tr>
+    </tbody>
+</table>
+
+
+
+<p-dialog header="Create Contact" [modal]="true" [(visible)]="visibleCreation" [style]="{ width: '60vw', height: '80vh' }" >
+
+
+    <form [formGroup] = "contactCreationForm" (ngSubmit) = "createContact()">
+        <p>
+            <label for = "firstName"><strong>First Name</strong></label>
+            <input type = "text" id = "firstName" name = "firstName" formControlName = "firstName">
+        </p>
+    
+        <p>
+            <label for = "lastname"><strong>Last Name</strong></label>
+            <input type = "text" id = "lastName" name = "lastName" formControlName = "lastName">
+        </p>
+
+        <p>
+            <label for = "company"><strong>Company</strong></label>
+            <input type = "text" id = "company" name = "company" formControlName = "company">
+        </p>
+    
+        <p>
+            <label for = "phoneNumber"><strong>Phone Number</strong></label>
+            <input type = "number" id = "phoneNumber" name = "phoneNumber" formControlName = "phoneNumber">
+        </p>
+
+        <p>
+            <label for="titleEnum"><strong>Title</strong></label>
+            <p-dropdown
+                id="titleEnum"
+                [options]="jobTitles"
+                formControlName="titleEnum"
+                placeholder="Select a Job"
+                optionLabel="name"
+                optionValue="name">
+            </p-dropdown>
+        </p>
+
+        <p>
+            <label for = "address"><strong>Address</strong></label>
+            <input type = "text" id = "address" name = "address" formControlName = "address">
+        </p>
+
+        <p>
+            <label for="country"><strong>Country</strong></label>
+            <p-dropdown
+                id="country"
+                [options]="countries"
+                formControlName="country"
+                placeholder="Select a Country"
+                optionLabel="name">
+                
+                <!-- ✅ Custom Template for Dropdown -->
+                <ng-template let-country pTemplate="item">
+                    <div class="country-item">
+                        <img [src]="country.flag" class="flag-icon" alt="{{ country.name }}" />
+                        <span>{{ country.name }}</span>
+                    </div>
+                </ng-template>
+            </p-dropdown>
+        </p>
+
+        <p>
+            <label for = "city"><strong>City</strong></label>
+            <input type = "text" id = "city" name = "city" formControlName = "city">
+        </p>
+
+        <p>
+            <label for = "zipCode"><strong>Code</strong></label>
+            <input type = "number" id = "zipCode" name = "zipCode" formControlName = "zipCode">
+        </p>
+
+        <p>
+            <label for = "state"><strong>State</strong></label>
+            <input type = "text" id = "state" name = "state" formControlName = "state">
+        </p>
+        
+
+        <p>
+            <button type ="submit">Create the Contact</button>
+        </p>
+    </form>
+</p-dialog>
+
+
+<p-dialog header="Edit Contact" [modal]="true" [(visible)]="visibleEdit" [style]="{ width: '60vw', height: '80vh' }" >
+    <nav class="contact-activity-nav">
+        <button class="nav-button">Contacts</button>
+        <button class="nav-button">Activities</button>
+    </nav>
+    <form [formGroup] = "contactEditForm" (ngSubmit) = "editContact()">
+
+        <p>
+            <label for = "firstName"><strong>First Name</strong></label>
+            <input type = "text" id = "firstName" name = "firstName" formControlName = "firstName">
+        </p>
+    
+        <p>
+            <label for = "lastname"><strong>Last Name</strong></label>
+            <input type = "text" id = "lastName" name = "lastName" formControlName = "lastName">
+        </p>
+
+        <p>
+            <label for = "company"><strong>Company</strong></label>
+            <input type = "text" id = "company" name = "company" formControlName = "company">
+        </p>
+    
+        <p>
+            <label for = "phoneNumber"><strong>Phone Number</strong></label>
+            <input type = "number" id = "phoneNumber" name = "phoneNumber" formControlName = "phoneNumber">
+        </p>
+
+        <p>
+            <label for="titleEnum"><strong>Title</strong></label>
+            <p-dropdown
+                id="titleEnum"
+                [options]="jobTitles"
+                formControlName="titleEnum"
+                placeholder="Select a Job"
+                optionLabel="name"
+                optionValue="name">
+            </p-dropdown>
+        </p>
+
+        <p>
+            <label for = "address"><strong>Address</strong></label>
+            <input type = "text" id = "address" name = "address" formControlName = "address">
+        </p>
+
+        <p>
+            <label for="country"><strong>Country</strong></label>
+            <p-dropdown
+                id="country"
+                [options]="countries"
+                formControlName="country"
+                placeholder="Select a Country"
+                optionLabel="name">
+                
+                <!-- ✅ Custom Template for Dropdown -->
+                <ng-template let-country pTemplate="item">
+                    <div class="country-item">
+                        <img [src]="country.flag" class="flag-icon" alt="{{ country.name }}" />
+                        <span>{{ country.name }}</span>
+                    </div>
+                </ng-template>
+            </p-dropdown>
+        </p>
+
+        <p>
+            <label for = "city"><strong>City</strong></label>
+            <input type = "text" id = "city" name = "city" formControlName = "city">
+        </p>
+
+        <p>
+            <label for = "zipCode"><strong>Code</strong></label>
+            <input type = "number" id = "zipCode" name = "zipCode" formControlName = "zipCode">
+        </p>
+
+        <p>
+            <label for = "state"><strong>State</strong></label>
+            <input type = "text" id = "state" name = "state" formControlName = "state">
+        </p>
+        
+
+        <p>
+            <button type ="submit">Edit the Contact</button>
+        </p>
+    </form>
+
+</p-dialog>
+
+
