@@ -1,26 +1,26 @@
 <div class="home-container">
-    <!-- Main Menu Button -->
-    <button 
-      class="menu-button" 
-      (mouseenter)="showDropdown()"
-      (mouseleave)="hideDropdown()"
-    >
-      CRM
-    </button>
-  
-    <!-- Dropdown Menu -->
-    <div 
-      class="dropdown-menu" 
-      [class.visible]="dropdownVisible"
-      (mouseenter)="showDropdown()" 
-      (mouseleave)="hideDropdown()"
-    >
-      <button class="dropdown-button contacts" (click) = "openContactDialog()">Contacts</button>
-      <button class="dropdown-button activities">Activities</button>
-    </div>
-  </div>
+  <!-- Main Menu Button -->
+  <button 
+    class="menu-button" 
+    (mouseenter)="showDropdown()"
+    (mouseleave)="hideDropdown()"
+  >
+    CRM
+  </button>
 
-  <p-dialog [(visible)]="ContactDialogVisible" [modal]="true" [closable]="true" header="Contacts">
-    <app-contact></app-contact>
-  </p-dialog>
-  
+  <!-- Dropdown Menu -->
+  <div 
+    class="dropdown-menu" 
+    [class.visible]="dropdownVisible"
+    (mouseenter)="showDropdown()" 
+    (mouseleave)="hideDropdown()"
+  >
+    <button class="dropdown-button contacts" (click)="openContactDialog()">Contacts</button>
+    <button class="dropdown-button activities">Activities</button>
+    <button class="dropdown-button logout" (click)="logout()">Logout</button>
+  </div>
+</div>
+
+<p-dialog [(visible)]="ContactDialogVisible" [modal]="true" [closable]="true" header="Contacts">
+  <app-contact></app-contact>
+</p-dialog>

@@ -1,11 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
+
+  constructor(private router: Router){
+  }
+
+  ngOnInit(): void {
+  }
+
+
+
   dropdownVisible = false;
 
   showDropdown() {
@@ -21,5 +31,11 @@ export class HomeComponent {
 
   openContactDialog(){
     this.ContactDialogVisible = true;
+  }
+
+  logout(){
+    localStorage.removeItem("authToken");
+    this.router.navigate(['/login']);
+
   }
 }

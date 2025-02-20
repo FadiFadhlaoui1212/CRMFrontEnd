@@ -85,3 +85,17 @@
   opacity: 1;
   transform: scale(1);
 }
+
+
+/* Logout button (below Activities, centered) */
+.logout {
+  background-color: #c0392b;
+  color: white;
+  bottom: -120px; /* Positioned below */
+  transform: scale(0.8);
+}
+
+.logout:hover {
+  background-color: #a93226;
+  transform: scale(1);
+}

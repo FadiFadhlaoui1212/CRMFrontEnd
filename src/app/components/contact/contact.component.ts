@@ -33,6 +33,32 @@ export class ContactComponent implements OnInit {
 
   textMessage: string = "";
 
+  profileImage: string = 'assets/no-profile-picture.png'; 
+
+  uploadImage(event: any) {
+    const file = event.target.files[0];  // Get the uploaded file
+
+
+  
+    if (file) {
+      const reader = new FileReader();
+
+      this.contactService.uploadPicture(event, this.contactToUpdateId).subscribe(
+        response => {
+          console.log("The picture has been uploaded successfully !!!");
+          reader.onload = (e: any) => {
+            const profileImage = document.getElementById("profileImage") as HTMLImageElement;
+            profileImage.src = e.target.result;  // Set new image
+          };
+          reader.readAsDataURL(file);  // Convert to Base64 URL
+        },
+        error => {
+          console.log('Error uploading the picture', error);
+        }
+      )
+    }
+  }
+  
 
 
 

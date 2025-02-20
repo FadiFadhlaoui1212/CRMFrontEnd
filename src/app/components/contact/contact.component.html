@@ -144,6 +144,7 @@
 <p-dialog header="Create Contact" [modal]="true" [(visible)]="visibleCreation" [style]="{ width: '60vw', height: '80vh' }" >
 
 
+      
     <form [formGroup] = "contactCreationForm" (ngSubmit) = "createContact()">
         <p>
             <label for = "firstName"><strong>First Name</strong></label>
@@ -225,6 +226,14 @@
 
 
 <p-dialog header="Edit Contact" [modal]="true" [(visible)]="visibleEdit" [style]="{ width: '60vw', height: '80vh' }" >
+    <div class="profile-wrapper">
+        <div class="profile-container">
+          <img id="profileImage" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="No Profile Picture" class="profile-image" />
+        </div>
+        <input type="file" id="fileInput" class="file-input" (change)="uploadImage($event)" />
+        <label for="fileInput" class="upload-button">Change Picture</label>
+      </div>
+      
     <nav class="contact-activity-nav">
         <button class="nav-button">Contacts</button>
         <button class="nav-button">Activities</button>
