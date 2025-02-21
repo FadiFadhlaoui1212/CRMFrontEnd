@@ -1,13 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Contact } from 'src/objects/contact';
-import { ContactCreationRequest } from 'src/objects/contactCreationRequest';
+import { Contact } from 'src/models/contact';
+import { ContactCreationRequest } from 'src/models/contactCreationRequest';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ContactService {
+export class ContactService  {
+
 
   constructor(private http: HttpClient) { }
 
@@ -42,6 +43,11 @@ export class ContactService {
     let URL = "http://localhost:9090/api/contact/" + contactId + "/upload-picture";
     return this.http.post(URL, formData, { responseType: 'text' });
   }
+
+  getProfilePicture(contactId: number): Observable<Blob> {
+    let URL = `http://localhost:9090/api/contact/${contactId}/get-picture`;
+    return this.http.get(URL, { responseType: 'blob' }); // 👈 Expect binary data (image)
+    }
 
 
 }

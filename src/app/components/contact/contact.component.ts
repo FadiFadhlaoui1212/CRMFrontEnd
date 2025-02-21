@@ -1,14 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { ContactService } from 'src/app/services/contact.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { TitleEnum, Contact } from 'src/objects/contact';
+import { TitleEnum, Contact } from 'src/models/contact';
 import { DialogModule } from 'primeng/dialog';
 import { CountriesService } from 'src/app/services/countries.service';
-import { ContactCreationRequest } from 'src/objects/contactCreationRequest';
+import { ContactCreationRequest } from 'src/models/contactCreationRequest';
 import { Message } from '@angular/compiler/src/i18n/i18n_ast';
 import { MessageService } from 'primeng/api';
 import { MessageModule } from 'primeng/message';
 import { MessagesModule } from 'primeng/messages';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { ConfirmationService } from 'primeng/api';
+
 
 @Component({
   selector: 'app-contact',
@@ -17,7 +20,7 @@ import { MessagesModule } from 'primeng/messages';
 })
 export class ContactComponent implements OnInit {
 
-  visibleCreation: boolean = false;
+  /*visibleCreation: boolean = false;
 
   visibleEdit: boolean = false;
 
@@ -35,25 +38,51 @@ export class ContactComponent implements OnInit {
 
   profileImage: string = 'assets/no-profile-picture.png'; 
 
+  profileImageSrc: string | null = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
+
+  rowsPerPage: number = 10; // Number of rows per page
+  totalRecords: number = 0;
+  currentPage: number = 0;
+
+  paginate(event: any) {
+    this.currentPage = event.first;
+    this.rowsPerPage = event.rows;
+    this.filteredContacts = this.contacts.slice(this.currentPage, this.currentPage + this.rowsPerPage);
+  }
+
+
   uploadImage(event: any) {
     const file = event.target.files[0];  // Get the uploaded file
-
-
-  
     if (file) {
       const reader = new FileReader();
 
       this.contactService.uploadPicture(event, this.contactToUpdateId).subscribe(
         response => {
-          console.log("The picture has been uploaded successfully !!!");
-          reader.onload = (e: any) => {
-            const profileImage = document.getElementById("profileImage") as HTMLImageElement;
-            profileImage.src = e.target.result;  // Set new image
-          };
-          reader.readAsDataURL(file);  // Convert to Base64 URL
+          if (response == "Profile picture uploaded successfully!" ) {
+            console.log("The picture has been uploaded successfully !!!");
+            reader.onload = (e: any) => {
+              this.profileImageSrc = e.target.result;  // Set new image
+            };
+            reader.readAsDataURL(file);  // Convert to Base64 URL
+            this.showUpdateMessage = true;
+            setTimeout(() => {
+              this.showUpdateMessage = false;
+            }, 3000);
+          }
+          else {
+            this.showOwnershipMessage = true;
+            setTimeout(() => {
+              this.showOwnershipMessage = false;
+            }, 3000);
+          }
+
         },
         error => {
           console.log('Error uploading the picture', error);
+          this.showErrorMessage = true;
+          setTimeout(() => {
+            this.showErrorMessage = false;
+          }, 3000);
         }
       )
     }
@@ -67,9 +96,6 @@ export class ContactComponent implements OnInit {
 
   contactToUpdateId: number = 0;
 
-  onBasicUploadAuto(event: Event){
-    
-  }
 
   ascendingSortOrder: boolean = true;
 
@@ -100,7 +126,7 @@ export class ContactComponent implements OnInit {
 
     this.ascendingSortOrder = !this.ascendingSortOrder;
 
-    return contacts.sort((a, b) => {
+    return this.filteredContacts.sort((a, b) => {
         let valueA: any;
         let valueB: any;
 
@@ -188,7 +214,26 @@ export class ContactComponent implements OnInit {
     );
     this.visibleEdit = true;
     this.contactToUpdateId = contact.id;
+    this.contactService.getProfilePicture(contact.id).subscribe((blob) => {
+      console.log(blob);
+      const reader = new FileReader();
+
+      
+      reader.onloadend = () => {
+        this.profileImageSrc = reader.result as string; // Convert Blob to Base64 URL
+      };
+
+      if(blob.size==0 || blob == null){
+        this.profileImageSrc = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
+      }
+
+  
+      reader.readAsDataURL(blob); // Read as data URL
+    }, (error) => {
+      console.error("Error loading profile image:", error);
+    });
   }
+
 
 
   contactCreationForm: FormGroup = new FormGroup({
@@ -218,38 +263,14 @@ export class ContactComponent implements OnInit {
   });
 
   createContact(){
-    const request: ContactCreationRequest = {
-      firstName: this.contactCreationForm.value.firstName,
-      lastName: this.contactCreationForm.value.lastName,
-      company: this.contactCreationForm.value.company,
-      phoneNumber: this.contactCreationForm.value.phoneNumber,
-      titleEnum: this.contactCreationForm.value.titleEnum,
-      address: this.contactCreationForm.value.address,
-      city: this.contactCreationForm.value.city,
-      country: this.contactCreationForm.value.country.name,
-      zipCode: this.contactCreationForm.value.zipCode,
-      state: this.contactCreationForm.value.state
-    };
+    const request: ContactCreationRequest = this.contactCreationForm.value;
     console.log(request);
 
     this.contactService.createContact(request).subscribe(
       response => {
-        console.log("This is the token", localStorage.getItem("authToken"));
-        const newContact: Contact = {
-          id: response.id,
-          firstName: response.firstName,
-          lastName: response.lastName,
-          company: response.company,
-          phoneNumber: response.phoneNumber,
-          titleEnum: response.titleEnum,
-          user: response.user,
-          address: response.address,
-          city: response.city,
-          country: response.country,
-          zipCode: response.zipCode,
-          state: response.state
-        }
+        const newContact: Contact = response;
         this.contacts.push(newContact);
+        this.filteredContacts.push(newContact);
         this.showCreationMessage = true;
         setTimeout(() => {
           this.showCreationMessage = false;
@@ -258,23 +279,16 @@ export class ContactComponent implements OnInit {
       },
       error => {
         console.log('Error creating contact:', error);
+        this.showErrorMessage = true;
+        setTimeout(() => {
+          this.showErrorMessage = false;
+        }, 3000);
       }
     )
   }
 
   editContact(){
-    const request: ContactCreationRequest = {
-      firstName: this.contactEditForm.value.firstName,
-      lastName: this.contactEditForm.value.lastName,
-      company: this.contactEditForm.value.company,
-      phoneNumber: this.contactEditForm.value.phoneNumber,
-      titleEnum: this.contactEditForm.value.titleEnum,
-      address: this.contactEditForm.value.address,
-      country: this.contactEditForm.value.country,
-      city: this.contactEditForm.value.city,
-      zipCode: this.contactEditForm.value.zipCode,
-      state: this.contactEditForm.value.state
-    };
+    const request: ContactCreationRequest = this.contactEditForm.value;
 
     this.contactService.updateContact(this.contactToUpdateId, request).subscribe(
       response => {
@@ -387,7 +401,7 @@ export class ContactComponent implements OnInit {
 
   contacts: Contact[] = [];
 
-  constructor(private contactService: ContactService, private countriesService: CountriesService, private messageService: MessageService ) { }
+  constructor(private contactService: ContactService, private countriesService: CountriesService, private messageService: MessageService, private sanitizer: DomSanitizer ) { }
 
   ngOnInit(): void {
     this.loadCountries();
@@ -396,6 +410,8 @@ export class ContactComponent implements OnInit {
       response => {
         this.contacts = response;
         this.filteredContacts = this.contacts;
+        this.totalRecords = this.contacts.length;
+        this.paginate({ first: 0, rows: this.rowsPerPage });
       },
       error => {
         console.log("error has occured"+error);
@@ -405,5 +421,160 @@ export class ContactComponent implements OnInit {
       });
 
   }
+*/
+
+
+contactDialog: boolean = false;
+
+contacts: Contact[] = [];
+
+contact: any = {};
+
+jobs: any[] = [
+  {label: "CEO", value: "CEO"},
+  {label: "ENGINEER", value: "ENGINEER"},
+  {label: "MANAGER", value: "MANAGER"},
+  {label: "DEVELOPER", value: "DEVELOPER"},
+  {label: "ANALYST", value: "ANALYST"}
+];
+
+
+selectedContacts: Contact[]  = [];
+
+submitted: boolean = false;
+
+countries: any[] = [];
+
+
+constructor(private contactService: ContactService, private countriesService: CountriesService, private messageService: MessageService, private confirmationService: ConfirmationService) { }
+
+loadCountries() {
+  console.log("Checking local storage for countries...");
+
+  // 1️⃣ Check if countries exist in local storage
+  const storedCountries = localStorage.getItem('countries');
+
+  if (storedCountries) {
+      // 2️⃣ If exists, use stored data
+      this.countries = JSON.parse(storedCountries);
+      console.log("✅ Loaded countries from local storage");
+  } else {
+      // 3️⃣ If not, fetch from API and save them
+      console.log("❌ Countries not found in local storage. Fetching from API...");
+
+      this.countriesService.loadCountries().subscribe(
+          (data) => {
+              this.countries = data.map(country => ({
+                  name: country.name.common,
+                  code: country.cca2,
+                  flag: country.flags.svg
+              }));
+
+              // 4️⃣ Save countries in local storage
+              localStorage.setItem('countries', JSON.stringify(this.countries));
+              console.log("✅ Countries saved to local storage for future use");
+          },
+          (error) => {
+              console.error("❌ Error loading countries from API", error);
+          }
+      );
+  }
+}
+
+ngOnInit() {
+  this.loadCountries();
+  this.contactService.getContacts()
+  .subscribe(
+    response => {
+      this.contacts = response;
+    },
+    error => {
+      console.log("error has occured"+error);
+    },
+    () => {                                   //complete() callback
+      console.error('Request completed');     //This is actually not needed 
+    });
+}
+
+openNew() {
+    this.contact = null;
+    this.submitted = false;
+    this.contactDialog = true;
+}
+
+getValue(e: EventTarget){
+  return (e as HTMLInputElement).value;
+}
+log(e:EventTarget) {
+console.log((e as HTMLInputElement).value);
+}
+
+deleteSelectedContacts() {
+    this.confirmationService.confirm({
+        message: 'Are you sure you want to delete the selected contacts?',
+        header: 'Confirm',
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => {
+            this.contacts = this.contacts.filter(val => !this.selectedContacts.includes(val));
+            this.selectedContacts = [];
+            this.messageService.add({severity:'success', summary: 'Successful', detail: 'Products Deleted', life: 3000});
+        }
+    });
+}
+
+editContact(contact: Contact) {
+    this.contact = {...contact};
+    this.contactDialog = true;
+}
+
+deleteContact(contact: Contact) {
+    this.confirmationService.confirm({
+        message: 'Are you sure you want to delete ' + contact.firstName + contact.lastName + '?',
+        header: 'Confirm',
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => {
+            this.contacts = this.contacts.filter(val => val.id !== contact.id);
+            this.contact = null;
+            this.messageService.add({severity:'success', summary: 'Successful', detail: 'Contact Deleted', life: 3000});
+        }
+    });
+}
+
+hideDialog() {
+    this.contactDialog = false;
+    this.submitted = false;
+}
+
+saveContact() {
+    this.submitted = true;
+
+    if (this.contact?.firstName.trim()) {
+        if (this.contact.id) {
+            this.contacts[this.findIndexById(this.contact.id)] = this.contact;
+            this.messageService.add({severity:'success', summary: 'Successful', detail: 'Product Updated', life: 3000});
+        }
+        else {
+            this.contacts.push(this.contact);
+            this.messageService.add({severity:'success', summary: 'Successful', detail: 'Product Created', life: 3000});
+        }
+
+        this.contacts = [...this.contacts];
+        this.contactDialog = false;
+        this.contact = null;
+    }
+}
+
+findIndexById(id: number): number {
+    let index = -1;
+    for (let i = 0; i < this.contacts.length; i++) {
+        if (this.contacts[i].id === id) {
+            index = i;
+            break;
+        }
+    }
+    return index;
+}
+
 
 }
+

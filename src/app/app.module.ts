@@ -19,9 +19,16 @@ import { DropdownModule } from 'primeng/dropdown';
 import { FileUploadModule } from 'primeng/fileupload';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { ContactComponent } from './components/contact/contact.component';
+import { PaginatorModule } from 'primeng/paginator';
+import { TableModule } from 'primeng/table';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { InputTextModule } from 'primeng/inputtext';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { ToolbarModule } from 'primeng/toolbar';
+
 
 
 
@@ -32,8 +39,7 @@ import { ContactComponent } from './components/contact/contact.component';
     RegistrationComponent,
     LoginComponent,
     HomeComponent,
-    ContactComponent, 
-    
+    ContactComponent
   ],
   imports: [
     BrowserModule,
@@ -49,10 +55,18 @@ import { ContactComponent } from './components/contact/contact.component';
     MessagesModule,
     MessageModule,
     ToastModule,
-    FormsModule
+    FormsModule,
+    PaginatorModule,
+    TableModule,
+    ConfirmDialogModule,
+    InputTextModule,
+    InputNumberModule,
+    DropdownModule,
+    ToolbarModule
   ],
   providers: [
     ContactService,
+    ConfirmationService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptorService,

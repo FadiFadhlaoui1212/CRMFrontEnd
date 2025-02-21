@@ -1,4 +1,6 @@
-<p-button (onClick)="showCreationDialog()" label="Add a new Contact" class="p-button-rounded p-button-success"></p-button>
+
+
+<!--<p-button (onClick)="showCreationDialog()" label="Add a new Contact" class="p-button-rounded p-button-success"></p-button>
 <p></p>
 <p-message 
     *ngIf="showCreationMessage" 
@@ -123,21 +125,28 @@
             <td>{{contact.city}}</td>
             <td>{{contact.zipCode}}</td>
             <td>{{contact.state}}</td>
-            <td>
-                <!-- Edit Button (Circular) -->
-                <button pButton class="p-button p-button-rounded p-button-warning p-button-sm custom-btn space-right" (click)="showEditDialog(contact)">
+            <td> 
+                 Edit Button (Circular) -->
+                <!--<button pButton class="p-button p-button-rounded p-button-warning p-button-sm custom-btn space-right" (click)="showEditDialog(contact)">
                     <i class="pi pi-pencil"></i>
-                </button>
+                </button> -->
             
                 <!-- Delete Button (Circular) -->
-                <button pButton class="p-button p-button-rounded p-button-danger p-button-sm custom-btn" (click)="deleteContact(contact.id)">
+                <!--<button pButton class="p-button p-button-rounded p-button-danger p-button-sm custom-btn" (click)="deleteContact(contact.id)">
                     <i class="pi pi-trash"></i>
-                </button>
+                </button> 
             </td>
             
         </tr>
     </tbody>
 </table>
+
+<p-paginator 
+  [rows]="rowsPerPage"
+  [totalRecords]="totalRecords"
+  [rowsPerPageOptions]="[5, 10, 20]" 
+  (onPageChange)="paginate($event)">
+</p-paginator>
 
 
 
@@ -192,8 +201,8 @@
                 placeholder="Select a Country"
                 optionLabel="name">
                 
-                <!-- ✅ Custom Template for Dropdown -->
-                <ng-template let-country pTemplate="item">
+                 ✅ Custom Template for Dropdown -->
+                <!--<ng-template let-country pTemplate="item">
                     <div class="country-item">
                         <img [src]="country.flag" class="flag-icon" alt="{{ country.name }}" />
                         <span>{{ country.name }}</span>
@@ -228,11 +237,12 @@
 <p-dialog header="Edit Contact" [modal]="true" [(visible)]="visibleEdit" [style]="{ width: '60vw', height: '80vh' }" >
     <div class="profile-wrapper">
         <div class="profile-container">
-          <img id="profileImage" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="No Profile Picture" class="profile-image" />
+          <img id="profileImage" [src]="profileImageSrc" alt="No Profile Picture" class="profile-image" />
         </div>
         <input type="file" id="fileInput" class="file-input" (change)="uploadImage($event)" />
         <label for="fileInput" class="upload-button">Change Picture</label>
-      </div>
+    </div>
+    
       
     <nav class="contact-activity-nav">
         <button class="nav-button">Contacts</button>
@@ -286,8 +296,8 @@
                 placeholder="Select a Country"
                 optionLabel="name">
                 
-                <!-- ✅ Custom Template for Dropdown -->
-                <ng-template let-country pTemplate="item">
+                 ✅ Custom Template for Dropdown -->
+                <!--<ng-template let-country pTemplate="item">
                     <div class="country-item">
                         <img [src]="country.flag" class="flag-icon" alt="{{ country.name }}" />
                         <span>{{ country.name }}</span>
@@ -317,6 +327,148 @@
         </p>
     </form>
 
+</p-dialog> -->
+
+
+<p-toast></p-toast>
+
+<div class="card">
+    <p-toolbar styleClass="p-mb-4">
+        <ng-template pTemplate="left">
+            <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success p-mr-2" (click)="openNew()"></button>
+            <button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-danger" (click)="deleteSelectedContacts()" [disabled]="!selectedContacts || !selectedContacts.length"></button>
+        </ng-template>
+
+        <ng-template pTemplate="right">
+            <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import" class="p-mr-2 p-d-inline-block"></p-fileUpload>
+            <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"></button>
+        </ng-template>
+    </p-toolbar>
+
+    <p-table #dt [value]="contacts" [rows]="10" [paginator]="true" [globalFilterFields]="['firstName']" responsiveLayout="scroll"
+        [(selection)]="selectedContacts" [rowHover]="true" dataKey="id"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
+        <ng-template pTemplate="caption">
+            <div class="p-d-flex p-ai-center p-jc-between">
+                <h5 class="p-m-0">Manage Contacts</h5>
+                <span class="p-input-icon-left">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" (input)="dt.filterGlobal($event.target, 'contains')" placeholder="Search..." />
+                </span>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width: 3rem">
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th pSortableColumn="firstName">First Name <p-sortIcon field="firstName"></p-sortIcon></th>
+                <th pSortableColumn="lastName">Last Name <p-sortIcon field="lastName"></p-sortIcon></th>
+                <th pSortableColumn="company">Company <p-sortIcon field="company"></p-sortIcon></th>
+                <th pSortableColumn="Product Owner">Product Owner<p-sortIcon field="user.firstName + user.lastName"></p-sortIcon></th>
+                <th pSortableColumn="phoneNumber">Phone Number<p-sortIcon field="phoneNumber"></p-sortIcon></th>
+                <th pSortableColumn="titleEnum">Job Title<p-sortIcon field="titleEnum"></p-sortIcon></th>
+                <th pSortableColumn="address">Address<p-sortIcon field="address"></p-sortIcon></th>
+                <th pSortableColumn="country">Country<p-sortIcon field="country"></p-sortIcon></th>
+                <th pSortableColumn="city">City<p-sortIcon field="city"></p-sortIcon></th>
+                <th pSortableColumn="zipCode">Zip Code<p-sortIcon field="zipCode"></p-sortIcon></th>
+                <th pSortableColumn="state">State<p-sortIcon field="state"></p-sortIcon></th>
+                <th></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-contact>
+            <tr>
+                <td>
+                    <p-tableCheckbox [value]="contact"></p-tableCheckbox>
+                </td>
+                <td>{{contact.firstName}}</td>
+                <!--<td><img [src]="" [alt]="contact.firstName" width="100" class="p-shadow-4" /></td> -->
+                <td>{{contact.lastName}}</td>
+                <td>{{contact.company}}</td>
+                <td>{{contact.user.firstname}} {{contact.user.lastname}}</td>
+                <td>{{contact.phoneNumber}}</td>
+                <td>{{contact.titleEnum}}</td>
+                <td>{{contact.address}}</td>
+                <td>{{contact.country}}</td>
+                <td>{{contact.country}}</td>
+                <td>{{contact.city}}</td>
+                <td>{{contact.zipCode}}</td>
+                <td>{{contact.state}}</td>
+                <td>
+                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" (click)="editContact(contact)"></button>
+                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteContact(contact)"></button>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="summary">
+            <div class="p-d-flex p-ai-center p-jc-between">
+                In total there are {{contacts ? contacts.length : 0 }} contacts.
+            </div>
+        </ng-template>
+    </p-table>
+</div>
+
+<p-dialog [(visible)]="contactDialog" [style]="{width: '450px'}" header="Contact Details" [modal]="true" styleClass="p-fluid">
+    <ng-template pTemplate="content">
+        <img [src]="">
+        <div class="p-field">
+            <label for="firstName">First Name</label>
+            <input type="text" pInputText id="firstName" [(ngModel)]="contact.firstName" required autofocus />
+            <small class="p-error" *ngIf="submitted && !contact.firstName">First Name is required.</small>
+        </div>
+        <div class="p-field">
+            <label for="lastName">Last Name</label>
+            <input type="text" pInputText id="lastName" [(ngModel)]="contact.lastName" required autofocus />
+            <small class="p-error" *ngIf="submitted && !contact.lastName">Last Name is required.</small>
+        </div>
+        <div class="p-field">
+            <label for="company">Company</label>
+            <input type="text" pInputText id="company" [(ngModel)]="contact.company" required autofocus />
+            <small class="p-error" *ngIf="submitted && !contact.company">Company is required.</small>
+        </div>
+        <div class="p-formgrid p-grid">
+            <div class="p-field p-col">
+                <label for="phoneNumber">Phone Number</label>
+                <p-inputNumber id="phoneNumber" [(ngModel)]="contact.phoneNumber"></p-inputNumber>
+                <small class="p-error" *ngIf="submitted && !contact.phoneNumber">Phone Number is required.</small>
+            </div>
+        </div>
+        <div class="p-field">
+            <label for="titleEnum">Job Title</label>
+            <p-dropdown [(ngModel)]="contact.titleEnum" inputId="titleEnum" [options]="jobs" placeholder="Select">
+                <ng-template let-option pTemplate="item">
+                    <span [class]="'product-badge status-' + option.value">{{option.label}}</span>
+                </ng-template>
+            </p-dropdown>
+        </div>
+        <div class="p-field">
+            <label for="address">Address</label>
+            <input type="text" pInputText id="address" [(ngModel)]="contact.address" required autofocus />
+            <small class="p-error" *ngIf="submitted && !contact.address">Address is required.</small>
+        </div>
+        <div class="p-field">
+            <label for="city">City</label>
+            <input type="text" pInputText id="city" [(ngModel)]="contact.city" required autofocus />
+            <small class="p-error" *ngIf="submitted && !contact.city">City is required.</small>
+        </div>
+        <div class="p-formgrid p-grid">
+            <div class="p-field p-col">
+                <label for="zipCode">Zip Code</label>
+                <p-inputNumber id="zipCode" [(ngModel)]="contact.zipCode"></p-inputNumber>
+                <small class="p-error" *ngIf="submitted && !contact.zipCode">Zip Code is required.</small>
+            </div>
+        </div>
+        <div class="p-field">
+            <label for="state">State</label>
+            <input type="text" pInputText id="state" [(ngModel)]="contact.state" required autofocus />
+            <small class="p-error" *ngIf="submitted && !contact.state">State is required.</small>
+        </div>
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+        <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveContact()"></button>
+    </ng-template>
 </p-dialog>
 
-
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
