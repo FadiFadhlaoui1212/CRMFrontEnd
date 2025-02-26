@@ -373,7 +373,7 @@
                 <th pSortableColumn="city">City<p-sortIcon field="city"></p-sortIcon></th>
                 <th pSortableColumn="zipCode">Zip Code<p-sortIcon field="zipCode"></p-sortIcon></th>
                 <th pSortableColumn="state">State<p-sortIcon field="state"></p-sortIcon></th>
-                <th></th>
+                <th>Actions</th>
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-contact>
@@ -381,8 +381,8 @@
                 <td>
                     <p-tableCheckbox [value]="contact"></p-tableCheckbox>
                 </td>
+                <!--<td><img [src]="BlobResult(contact.profilePicture)" [alt]="" width="100" class="p-shadow-4" /></td> -->
                 <td>{{contact.firstName}}</td>
-                <!--<td><img [src]="" [alt]="contact.firstName" width="100" class="p-shadow-4" /></td> -->
                 <td>{{contact.lastName}}</td>
                 <td>{{contact.company}}</td>
                 <td>{{contact.user.firstname}} {{contact.user.lastname}}</td>
@@ -408,6 +408,13 @@
 </div>
 
 <p-dialog [(visible)]="contactDialog" [style]="{width: '450px'}" header="Contact Details" [modal]="true" styleClass="p-fluid">
+    <div class="profile-wrapper">
+        <div class="profile-container">
+          <img id="profileImage" [src]="profileImageSrc" alt="No Profile Picture" class="profile-image" />
+        </div>
+        <input type="file" id="fileInput" class="file-input" (change)="uploadImage($event)" />
+        <label for="fileInput" class="upload-button">Change Picture</label>
+    </div>
     <ng-template pTemplate="content">
         <img [src]="">
         <div class="p-field">

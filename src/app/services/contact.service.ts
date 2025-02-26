@@ -44,10 +44,7 @@ export class ContactService  {
     return this.http.put(URL, request, {'headers': headers});
   }
 
-  uploadPicture(event: any, contactId: number):Observable<any>{
-    const file = event.target.files[0];
-    const formData = new FormData();
-    formData.append('file', file);
+  uploadPicture(contactId: number, formData: FormData):Observable<any>{
     let URL = "http://localhost:9090/api/contact/" + contactId + "/upload-picture";
     return this.http.post(URL, formData, { responseType: 'text' });
   }

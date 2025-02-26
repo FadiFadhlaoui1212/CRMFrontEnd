@@ -449,11 +449,33 @@ submitted: boolean = false;
 
 creatingContact: boolean = true;
 editingContact: boolean = true;
+profileImageSrc: string = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
+
+formData: FormData = new FormData();
 
 countries: any[] = [];
 
 
 constructor(private contactService: ContactService, private countriesService: CountriesService, private messageService: MessageService, private confirmationService: ConfirmationService) { }
+
+BlobResult(picture: Blob):string {
+  const blobUrl = URL.createObjectURL(picture);
+  return blobUrl;
+}
+
+
+uploadImage(event: Event){
+  const input = event.target as HTMLInputElement;
+  if (input.files && input.files[0]) {
+    const file = input.files[0];
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.profileImageSrc = reader.result as string;
+    };
+    reader.readAsDataURL(file);
+    this.formData.append('file', file);
+}
+}
 
 filterContacts(eventTarget: any) {
   if (this.dt) {
@@ -560,6 +582,20 @@ editContact(contact: Contact) {
 
     this.contact = {...contact};
     this.contactDialog = true;
+    this.contactService.getProfilePicture(contact.id).subscribe((blob) => {
+      const reader = new FileReader();      
+      reader.onloadend = () => {
+        if(blob.size==0 || blob == null){
+          this.profileImageSrc = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
+        }
+        else {
+          this.profileImageSrc = reader.result as string; // Convert Blob to Base64 URL
+        }
+      };
+        reader.readAsDataURL(blob); // Read as data URL      
+    }, (error) => {
+      console.error("Error loading profile image:", error);
+    });
 }
 
 deleteContact(contact: Contact) {
@@ -601,6 +637,15 @@ saveContact() {
         const newContact: Contact = response;
         this.contacts.push(newContact);
         this.contacts = [...this.contacts]; // Assign a new array reference
+        this.contactService.uploadPicture(request.id, this.formData).subscribe(
+          response => {
+            console.log(response);
+          },
+          error => {
+            this.messageService.add({severity:'error', summary: 'Error', detail: 'Error while uploading the Picture', life: 3000});
+            console.log("Here is the Error", error);
+          }
+        )
         this.messageService.add({severity:'success', summary: 'Successful', detail: 'Contact Created', life: 3000});
         this.contactDialog = false;
         this.contact = {};
@@ -622,6 +667,15 @@ saveContact() {
                 this.contacts[i] = request;
               }
               this.contacts = [...this.contacts]; // Assign a new array reference
+              this.contactService.uploadPicture(request.id, this.formData).subscribe(
+                response => {
+                  console.log(response);
+                },
+                error => {
+                  this.messageService.add({severity:'error', summary: 'Error', detail: 'Error while uploading the Picture', life: 3000});
+                  console.log("Here is the Error", error);
+                }
+              )
             }
           }
           )

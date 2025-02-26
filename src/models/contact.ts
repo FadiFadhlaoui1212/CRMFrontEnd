@@ -28,6 +28,7 @@ export class User {
     id: number;
     firstName: string;
     lastName: string;
+    profilePicture: Blob;
     company: string;
     user: User; // Reference to User (use ID instead of full User object)
     phoneNumber: string;
@@ -42,6 +43,7 @@ export class User {
       id: number,
       firstName: string,
       lastName: string,
+      profilePicture: Blob,
       company: string,
       user: User,
       phoneNumber: string,
@@ -55,6 +57,7 @@ export class User {
       this.id = id;
       this.firstName = firstName;
       this.lastName = lastName;
+      this.profilePicture = profilePicture;
       this.company = company;
       this.user = user;
       this.phoneNumber = phoneNumber;
