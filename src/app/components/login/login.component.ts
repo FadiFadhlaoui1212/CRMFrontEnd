@@ -35,8 +35,6 @@ export class LoginComponent implements OnInit {
     console.log(request);
     this.authService.login(request).subscribe(
       response => {
-        alert("Logged in successfully");
-        console.log("Logged in successfully", response);
         localStorage.removeItem("authToken");
         const token = response.token;
         localStorage.setItem("authToken", token);

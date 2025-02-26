@@ -29,10 +29,18 @@ export class ContactService  {
     return this.http.delete(URL);
   }
 
+  deleteContacts(ids: number[]):Observable<any>{
+    const headers = { 'content-type': 'application/json'};
+    const body = JSON.stringify(ids);
+    let URL = "http://localhost:9090/api/contact/delete";
+    return this.http.request('DELETE', URL, {headers, body});
+  }
+
   updateContact(contactId: number, request: ContactCreationRequest):Observable<any>{
     const headers = { 'content-type': 'application/json'};
     const body = JSON.stringify(request);
     let URL = "http://localhost:9090/api/contact/update/" + contactId;
+    console.log("here is the URL", URL);
     return this.http.put(URL, request, {'headers': headers});
   }
 

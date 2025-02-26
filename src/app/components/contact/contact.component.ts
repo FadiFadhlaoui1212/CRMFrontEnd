@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ContactService } from 'src/app/services/contact.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { TitleEnum, Contact } from 'src/models/contact';
@@ -11,6 +11,9 @@ import { MessageModule } from 'primeng/message';
 import { MessagesModule } from 'primeng/messages';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ConfirmationService } from 'primeng/api';
+import { Table } from 'primeng/table'; // ✅ Import the correct Table type
+
+
 
 
 @Component({
@@ -423,6 +426,7 @@ export class ContactComponent implements OnInit {
   }
 */
 
+@ViewChild('dt') dt!: Table;
 
 contactDialog: boolean = false;
 
@@ -443,10 +447,19 @@ selectedContacts: Contact[]  = [];
 
 submitted: boolean = false;
 
+creatingContact: boolean = true;
+editingContact: boolean = true;
+
 countries: any[] = [];
 
 
 constructor(private contactService: ContactService, private countriesService: CountriesService, private messageService: MessageService, private confirmationService: ConfirmationService) { }
+
+filterContacts(eventTarget: any) {
+  if (this.dt) {
+    this.dt.filterGlobal(eventTarget.value, 'contains');
+  }
+}
 
 loadCountries() {
   console.log("Checking local storage for countries...");
@@ -487,6 +500,9 @@ ngOnInit() {
   .subscribe(
     response => {
       this.contacts = response;
+      for (let c of this.contacts){
+        c.user.fullname = c.user.firstname + c.user.lastname;
+      }
     },
     error => {
       console.log("error has occured"+error);
@@ -497,9 +513,11 @@ ngOnInit() {
 }
 
 openNew() {
-    this.contact = null;
+    this.contact = {};
     this.submitted = false;
     this.contactDialog = true;
+    this.creatingContact = true;
+    this.editingContact = false;
 }
 
 getValue(e: EventTarget){
@@ -515,14 +533,31 @@ deleteSelectedContacts() {
         header: 'Confirm',
         icon: 'pi pi-exclamation-triangle',
         accept: () => {
-            this.contacts = this.contacts.filter(val => !this.selectedContacts.includes(val));
-            this.selectedContacts = [];
-            this.messageService.add({severity:'success', summary: 'Successful', detail: 'Products Deleted', life: 3000});
+          const contactsIds: number[] = this.selectedContacts.map(contact => contact.id);
+          this.contactService.deleteContacts(contactsIds).subscribe(
+            response => {
+              if (response.message == "The accounts have been deleted successfully !!!") {
+                this.contacts = this.contacts.filter(val => !this.selectedContacts.includes(val));
+                this.selectedContacts = [];
+                this.messageService.add({severity:'success', summary: 'Successful', detail: 'Contacts Deleted', life: 3000});
+              }
+              else {
+                this.messageService.add({severity:'warn', summary: 'Warning', detail: response.message , life: 3000});
+              }
+            },
+            error => {
+              this.messageService.add({severity:'error', summary: 'Error', detail: 'An error has occured', life: 3000});
+            }
+          );
         }
     });
 }
 
 editContact(contact: Contact) {
+    /*this.contactService.updateContact(this.contactToUpdateId, request).subscribe */
+    this.editingContact = true;
+    this.creatingContact = false;
+
     this.contact = {...contact};
     this.contactDialog = true;
 }
@@ -533,9 +568,20 @@ deleteContact(contact: Contact) {
         header: 'Confirm',
         icon: 'pi pi-exclamation-triangle',
         accept: () => {
-            this.contacts = this.contacts.filter(val => val.id !== contact.id);
-            this.contact = null;
-            this.messageService.add({severity:'success', summary: 'Successful', detail: 'Contact Deleted', life: 3000});
+          this.contactService.deleteContact(contact.id).subscribe(
+            response => {
+              if (response.message == "The contact has been deleted successfully !!!"){
+                this.contacts = this.contacts.filter(c => (c.id!=contact.id));
+                this.messageService.add({severity:'success', summary: 'Successful', detail: 'Contact Deleted', life: 3000});
+              }
+              else {
+                this.messageService.add({severity:'warn', summary: 'Warn', detail: 'You cannot delete the contact since you are not the owner', life: 3000});
+              }
+            },
+            error => {
+              this.messageService.add({severity:'error', summary: 'Error', detail: 'An error has occured', life: 3000});
+            }
+          )  
         }
     });
 }
@@ -546,22 +592,54 @@ hideDialog() {
 }
 
 saveContact() {
-    this.submitted = true;
-
-    if (this.contact?.firstName.trim()) {
-        if (this.contact.id) {
-            this.contacts[this.findIndexById(this.contact.id)] = this.contact;
-            this.messageService.add({severity:'success', summary: 'Successful', detail: 'Product Updated', life: 3000});
+  const request = this.contact;
+  console.log("contact", this.contact);
+  console.log("request", request);
+  if(this.creatingContact){
+    this.contactService.createContact(request).subscribe(
+      response => {
+        const newContact: Contact = response;
+        this.contacts.push(newContact);
+        this.contacts = [...this.contacts]; // Assign a new array reference
+        this.messageService.add({severity:'success', summary: 'Successful', detail: 'Contact Created', life: 3000});
+        this.contactDialog = false;
+        this.contact = {};
+        this.submitted = true;
+      },
+      error => {
+        this.messageService.add({severity:'error', summary: 'Error', detail: 'An error has occured', life: 3000});
+      }
+    )
+  }
+  else {
+    this.contactService.updateContact(this.contact.id, request).subscribe(
+      response => {
+        if (response.message == "The contact has been updated successfully !!!"){
+          this.contacts.forEach((item, index) => {
+            for (let i = 0 ; i < this.contacts.length ; i ++){
+              if (this.contacts[i].id == request.id){
+                console.log("Yes We found it !!!!!", request.id);
+                this.contacts[i] = request;
+              }
+              this.contacts = [...this.contacts]; // Assign a new array reference
+            }
+          }
+          )
+          this.messageService.add({severity:'success', summary: 'Successful', detail: 'Contact Updated', life: 3000});
         }
         else {
-            this.contacts.push(this.contact);
-            this.messageService.add({severity:'success', summary: 'Successful', detail: 'Product Created', life: 3000});
+          this.messageService.add({severity:'warn', summary: 'warning', detail: 'You cannot update this contact since you are not the owner', life: 3000});
         }
+      },
+      error => {
+        this.messageService.add({severity:'error', summary: 'Error', detail: 'An error has occured', life: 3000});
+      }
+    )
 
-        this.contacts = [...this.contacts];
-        this.contactDialog = false;
-        this.contact = null;
-    }
+    this.contactDialog = false;
+    this.contact = {};
+    this.submitted = true;
+  }
 }
 
 findIndexById(id: number): number {

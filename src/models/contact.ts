@@ -10,6 +10,7 @@ export class User {
     id: number;
     firstname: string;
     lastname: string;
+    fullname: string;
     email: string;
     password: string;
 
@@ -17,6 +18,7 @@ export class User {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
+        this.fullname = firstname + lastname;
         this.email = email;
         this.password = password;
     }

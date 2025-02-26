@@ -18,6 +18,7 @@ export class AuthenticationService {
   }
 
   login (request: loginRequest): Observable<any>{
+    localStorage.removeItem("authToken");
     let URL = "http://localhost:9090/api/v1/auth/authenticate";
     const headers = new HttpHeaders({'Content-Type': 'application/json'});
     return this.http.post<loginRequest>(URL, request, {headers});

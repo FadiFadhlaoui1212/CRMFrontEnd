@@ -353,7 +353,7 @@
                 <h5 class="p-m-0">Manage Contacts</h5>
                 <span class="p-input-icon-left">
                     <i class="pi pi-search"></i>
-                    <input pInputText type="text" (input)="dt.filterGlobal($event.target, 'contains')" placeholder="Search..." />
+                    <input pInputText type="text" (input)="filterContacts($event.target)" placeholder="Search..." />
                 </span>
             </div>
         </ng-template>
@@ -365,7 +365,7 @@
                 <th pSortableColumn="firstName">First Name <p-sortIcon field="firstName"></p-sortIcon></th>
                 <th pSortableColumn="lastName">Last Name <p-sortIcon field="lastName"></p-sortIcon></th>
                 <th pSortableColumn="company">Company <p-sortIcon field="company"></p-sortIcon></th>
-                <th pSortableColumn="Product Owner">Product Owner<p-sortIcon field="user.firstName + user.lastName"></p-sortIcon></th>
+                <th pSortableColumn="user.fullname">Product Owner<p-sortIcon field="user.fullname"></p-sortIcon></th>
                 <th pSortableColumn="phoneNumber">Phone Number<p-sortIcon field="phoneNumber"></p-sortIcon></th>
                 <th pSortableColumn="titleEnum">Job Title<p-sortIcon field="titleEnum"></p-sortIcon></th>
                 <th pSortableColumn="address">Address<p-sortIcon field="address"></p-sortIcon></th>
@@ -389,7 +389,6 @@
                 <td>{{contact.phoneNumber}}</td>
                 <td>{{contact.titleEnum}}</td>
                 <td>{{contact.address}}</td>
-                <td>{{contact.country}}</td>
                 <td>{{contact.country}}</td>
                 <td>{{contact.city}}</td>
                 <td>{{contact.zipCode}}</td>
@@ -446,6 +445,20 @@
             <input type="text" pInputText id="address" [(ngModel)]="contact.address" required autofocus />
             <small class="p-error" *ngIf="submitted && !contact.address">Address is required.</small>
         </div>
+        <div class="p-field">
+            <label for="country">Country</label>
+            <p-dropdown [(ngModel)]="contact.country" inputId="country" 
+            [options]="countries" 
+            placeholder="Select"
+            optionLabel="name" optionValue="name">
+                <ng-template let-country pTemplate="item">
+                    <div class="country-item">
+                        <img [src]="country.flag" class="flag-icon" alt="{{ country.name }}" />
+                        <span>{{ country.name }}</span>
+                    </div>
+                </ng-template>
+            </p-dropdown>
+        </div>     
         <div class="p-field">
             <label for="city">City</label>
             <input type="text" pInputText id="city" [(ngModel)]="contact.city" required autofocus />
