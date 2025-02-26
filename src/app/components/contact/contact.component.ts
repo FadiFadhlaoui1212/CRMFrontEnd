@@ -473,6 +473,9 @@ uploadImage(event: Event){
       this.profileImageSrc = reader.result as string;
     };
     reader.readAsDataURL(file);
+    if (this.formData.has('file')) {
+      this.formData.delete('file');
+    }
     this.formData.append('file', file);
 }
 }
