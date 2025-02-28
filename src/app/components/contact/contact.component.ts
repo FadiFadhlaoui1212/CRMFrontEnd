@@ -458,10 +458,6 @@ countries: any[] = [];
 
 constructor(private contactService: ContactService, private countriesService: CountriesService, private messageService: MessageService, private confirmationService: ConfirmationService) { }
 
-BlobResult(picture: Blob):string {
-  const blobUrl = URL.createObjectURL(picture);
-  return blobUrl;
-}
 
 
 uploadImage(event: Event){
@@ -520,7 +516,6 @@ loadCountries() {
 }
 
 ngOnInit() {
-  this.loadCountries();
   this.contactService.getContacts()
   .subscribe(
     response => {
@@ -545,11 +540,16 @@ openNew() {
     this.editingContact = false;
 }
 
-getValue(e: EventTarget){
-  return (e as HTMLInputElement).value;
+displaySuccessMessage(content: string){
+  this.messageService.add({severity:'success', summary: 'Successful', detail: content, life: 3000});
 }
-log(e:EventTarget) {
-console.log((e as HTMLInputElement).value);
+
+displayErrorMessage(content: string){
+  this.messageService.add({severity:'error', summary: 'Error', detail: content, life: 3000});
+}
+
+displayWarningMessage(content: string){
+  this.messageService.add({severity:'warn', summary: 'Warning', detail: content, life: 3000});
 }
 
 deleteSelectedContacts() {
@@ -577,6 +577,29 @@ deleteSelectedContacts() {
         }
     });
 }
+
+updateContact(newContact: Contact){
+  for (let i = 0 ; i < this.contacts.length ; i ++){
+    if (this.contacts[i].id == newContact.id){
+      console.log("Yes We found it !!!!!", newContact.id);
+      this.contacts[i] = newContact;
+    }
+    }
+  this.contacts = [...this.contacts];
+  this.contactDialog = false;
+  this.contact = {};
+  this.submitted = true;
+}
+
+saveContact(newContact: Contact) {
+  const request = this.contact;
+  this.contacts.push(newContact);
+  this.contacts = [...this.contacts]; // Assign a new array reference
+  this.contactDialog = false;
+  this.contact = {};
+  this.submitted = true;
+  }
+
 
 editContact(contact: Contact) {
     /*this.contactService.updateContact(this.contactToUpdateId, request).subscribe */
@@ -630,74 +653,7 @@ hideDialog() {
     this.submitted = false;
 }
 
-saveContact() {
-  const request = this.contact;
-  console.log("contact", this.contact);
-  console.log("request", request);
-  if(this.creatingContact){
-    this.contactService.createContact(request).subscribe(
-      response => {
-        const newContact: Contact = response;
-        this.contacts.push(newContact);
-        this.contacts = [...this.contacts]; // Assign a new array reference
-        this.contactService.uploadPicture(request.id, this.formData).subscribe(
-          response => {
-            console.log(response);
-          },
-          error => {
-            this.messageService.add({severity:'error', summary: 'Error', detail: 'Error while uploading the Picture', life: 3000});
-            console.log("Here is the Error", error);
-          }
-        )
-        this.messageService.add({severity:'success', summary: 'Successful', detail: 'Contact Created', life: 3000});
-        this.contactDialog = false;
-        this.contact = {};
-        this.submitted = true;
-      },
-      error => {
-        this.messageService.add({severity:'error', summary: 'Error', detail: 'An error has occured', life: 3000});
-      }
-    )
-  }
-  else {
-    this.contactService.updateContact(this.contact.id, request).subscribe(
-      response => {
-        if (response.message == "The contact has been updated successfully !!!"){
-          this.contacts.forEach((item, index) => {
-            for (let i = 0 ; i < this.contacts.length ; i ++){
-              if (this.contacts[i].id == request.id){
-                console.log("Yes We found it !!!!!", request.id);
-                this.contacts[i] = request;
-              }
-              this.contacts = [...this.contacts]; // Assign a new array reference
-              this.contactService.uploadPicture(request.id, this.formData).subscribe(
-                response => {
-                  console.log(response);
-                },
-                error => {
-                  this.messageService.add({severity:'error', summary: 'Error', detail: 'Error while uploading the Picture', life: 3000});
-                  console.log("Here is the Error", error);
-                }
-              )
-            }
-          }
-          )
-          this.messageService.add({severity:'success', summary: 'Successful', detail: 'Contact Updated', life: 3000});
-        }
-        else {
-          this.messageService.add({severity:'warn', summary: 'warning', detail: 'You cannot update this contact since you are not the owner', life: 3000});
-        }
-      },
-      error => {
-        this.messageService.add({severity:'error', summary: 'Error', detail: 'An error has occured', life: 3000});
-      }
-    )
 
-    this.contactDialog = false;
-    this.contact = {};
-    this.submitted = true;
-  }
-}
 
 findIndexById(id: number): number {
     let index = -1;

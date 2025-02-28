@@ -38,7 +38,7 @@ export class User {
     city: string;
     zipCode: number;
     state: string;
-  
+
     constructor(
       id: number,
       firstName: string,

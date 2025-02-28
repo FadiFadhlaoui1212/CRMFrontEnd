@@ -28,6 +28,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ToolbarModule } from 'primeng/toolbar';
+import { ContactFormComponent } from './components/contact-form/contact-form.component';
 
 
 
@@ -39,7 +40,8 @@ import { ToolbarModule } from 'primeng/toolbar';
     RegistrationComponent,
     LoginComponent,
     HomeComponent,
-    ContactComponent
+    ContactComponent,
+    ContactFormComponent
   ],
   imports: [
     BrowserModule,

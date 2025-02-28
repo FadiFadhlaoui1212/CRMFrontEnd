@@ -408,87 +408,20 @@
 </div>
 
 <p-dialog [(visible)]="contactDialog" [style]="{width: '450px'}" header="Contact Details" [modal]="true" styleClass="p-fluid">
-    <div class="profile-wrapper">
-        <div class="profile-container">
-          <img id="profileImage" [src]="profileImageSrc" alt="No Profile Picture" class="profile-image" />
-        </div>
-        <input type="file" id="fileInput" class="file-input" (change)="uploadImage($event)" />
-        <label for="fileInput" class="upload-button">Change Picture</label>
-    </div>
-    <ng-template pTemplate="content">
-        <img [src]="">
-        <div class="p-field">
-            <label for="firstName">First Name</label>
-            <input type="text" pInputText id="firstName" [(ngModel)]="contact.firstName" required autofocus />
-            <small class="p-error" *ngIf="submitted && !contact.firstName">First Name is required.</small>
-        </div>
-        <div class="p-field">
-            <label for="lastName">Last Name</label>
-            <input type="text" pInputText id="lastName" [(ngModel)]="contact.lastName" required autofocus />
-            <small class="p-error" *ngIf="submitted && !contact.lastName">Last Name is required.</small>
-        </div>
-        <div class="p-field">
-            <label for="company">Company</label>
-            <input type="text" pInputText id="company" [(ngModel)]="contact.company" required autofocus />
-            <small class="p-error" *ngIf="submitted && !contact.company">Company is required.</small>
-        </div>
-        <div class="p-formgrid p-grid">
-            <div class="p-field p-col">
-                <label for="phoneNumber">Phone Number</label>
-                <p-inputNumber id="phoneNumber" [(ngModel)]="contact.phoneNumber"></p-inputNumber>
-                <small class="p-error" *ngIf="submitted && !contact.phoneNumber">Phone Number is required.</small>
-            </div>
-        </div>
-        <div class="p-field">
-            <label for="titleEnum">Job Title</label>
-            <p-dropdown [(ngModel)]="contact.titleEnum" inputId="titleEnum" [options]="jobs" placeholder="Select">
-                <ng-template let-option pTemplate="item">
-                    <span [class]="'product-badge status-' + option.value">{{option.label}}</span>
-                </ng-template>
-            </p-dropdown>
-        </div>
-        <div class="p-field">
-            <label for="address">Address</label>
-            <input type="text" pInputText id="address" [(ngModel)]="contact.address" required autofocus />
-            <small class="p-error" *ngIf="submitted && !contact.address">Address is required.</small>
-        </div>
-        <div class="p-field">
-            <label for="country">Country</label>
-            <p-dropdown [(ngModel)]="contact.country" inputId="country" 
-            [options]="countries" 
-            placeholder="Select"
-            optionLabel="name" optionValue="name">
-                <ng-template let-country pTemplate="item">
-                    <div class="country-item">
-                        <img [src]="country.flag" class="flag-icon" alt="{{ country.name }}" />
-                        <span>{{ country.name }}</span>
-                    </div>
-                </ng-template>
-            </p-dropdown>
-        </div>     
-        <div class="p-field">
-            <label for="city">City</label>
-            <input type="text" pInputText id="city" [(ngModel)]="contact.city" required autofocus />
-            <small class="p-error" *ngIf="submitted && !contact.city">City is required.</small>
-        </div>
-        <div class="p-formgrid p-grid">
-            <div class="p-field p-col">
-                <label for="zipCode">Zip Code</label>
-                <p-inputNumber id="zipCode" [(ngModel)]="contact.zipCode"></p-inputNumber>
-                <small class="p-error" *ngIf="submitted && !contact.zipCode">Zip Code is required.</small>
-            </div>
-        </div>
-        <div class="p-field">
-            <label for="state">State</label>
-            <input type="text" pInputText id="state" [(ngModel)]="contact.state" required autofocus />
-            <small class="p-error" *ngIf="submitted && !contact.state">State is required.</small>
-        </div>
-    </ng-template>
+    <app-contact-form
+     (hideDialogMsg)="hideDialog()"
+    [creatingContact]="creatingContact"
+    [editingContact]="editingContact"
+    (createdContact)="saveContact($event)"
+    (editedContact)="updateContact($event)"
+    (SuccessMsg)="displaySuccessMessage($event)"
+    (ErrorMsg)="displayErrorMessage($event)"
+    (WarningMsg)="displayWarningMessage($event)"
+    [profileImageSrc]="profileImageSrc"
+    [contact]="contact"
 
-    <ng-template pTemplate="footer">
-        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
-        <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveContact()"></button>
-    </ng-template>
-</p-dialog>
+    >
+</app-contact-form>
+</p-dialog> 
 
 <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
