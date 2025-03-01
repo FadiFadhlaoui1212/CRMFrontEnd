@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ContactService } from 'src/app/services/contact.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { TitleEnum, Contact } from 'src/models/contact';
+import { TitleEnum, Contact } from 'src/app/models/contact';
 import { DialogModule } from 'primeng/dialog';
 import { CountriesService } from 'src/app/services/countries.service';
-import { ContactCreationRequest } from 'src/models/contactCreationRequest';
+import { ContactCreationRequest } from 'src/app/models/contactCreationRequest';
 import { Message } from '@angular/compiler/src/i18n/i18n_ast';
 import { MessageService } from 'primeng/api';
 import { MessageModule } from 'primeng/message';
@@ -533,6 +533,7 @@ ngOnInit() {
 }
 
 openNew() {
+    this.profileImageSrc = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
     this.contact = {};
     this.submitted = false;
     this.contactDialog = true;

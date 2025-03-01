@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { registrationRequest } from 'src/models/registrationRequest';
+import { registrationRequest } from 'src/app/models/registrationRequest';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 
 @Component({

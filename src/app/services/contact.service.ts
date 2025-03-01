@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Contact } from 'src/models/contact';
-import { ContactCreationRequest } from 'src/models/contactCreationRequest';
+import { Contact } from 'src/app/models/contact';
+import { ContactCreationRequest } from 'src/app/models/contactCreationRequest';
 
 @Injectable({
   providedIn: 'root'

@@ -29,6 +29,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ContactFormComponent } from './components/contact-form/contact-form.component';
+import { ActivityFormComponent } from './components/activity-form/activity-form.component';
 
 
 
@@ -41,7 +42,8 @@ import { ContactFormComponent } from './components/contact-form/contact-form.com
     LoginComponent,
     HomeComponent,
     ContactComponent,
-    ContactFormComponent
+    ContactFormComponent,
+    ActivityFormComponent
   ],
   imports: [
     BrowserModule,
