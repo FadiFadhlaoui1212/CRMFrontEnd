@@ -1,1 +1,49 @@
-<p>activity-form works!</p>
+<div class="p-field">
+    <label for="date">Date</label>
+    <input type="date" pInputText id="date" [(ngModel)]="activity.date"/>
+    <small class="p-error" *ngIf="submitted && !activity.date">Date is Required.</small>
+</div>
+<div class="p-field">
+    <label for="type">Type</label>
+    <p-dropdown [(ngModel)]="activity.type" inputId="type" [options]="types" placeholder="Select">
+        <ng-template let-option pTemplate="item">
+            <span [class]="'product-badge status-' + option.value">{{option.label}}</span>
+        </ng-template>
+    </p-dropdown>
+</div>
+<div class="p-field">
+    <label for="subject">Subject</label>
+    <input type="text" pInputText id="subject" [(ngModel)]="activity.subject" required autofocus />
+    <small class="p-error" *ngIf="submitted && !activity.subject">Subject is required</small>
+</div>
+<div class="p-field">
+    <label for="selectedContact">Participants</label>
+    <p-dropdown [(ngModel)]="selectedContact" (ngModelChange)="addParticipant()" inputId="selectedContact" [options]="participants" placeholder="Select">
+        <ng-template let-option pTemplate="item">
+            <span [class]="'product-badge status-' + option.value">{{option.label}}</span>
+        </ng-template>
+    </p-dropdown>
+</div>
+
+<div *ngFor="let participant of activity.participants">
+    <p-chip [label] = "participant.firstName + ' ' + participant.lastName " [removable]="true" (onRemove)="removeParticipant(participant)"></p-chip>
+</div>
+
+
+
+
+<div class="p-field">
+    <label for="note">Notes</label>
+    <input type="text" pInputText id="note" [(ngModel)]="activity.note" required autofocus />
+    <small class="p-error" *ngIf="submitted && !activity.note">Notes are required</small>
+</div>
+
+
+<footer class="footer-buttons">
+<button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="true"></button>
+<button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveActivity()"></button>
+</footer>
+
+
+
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>

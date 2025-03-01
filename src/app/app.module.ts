@@ -30,6 +30,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ContactFormComponent } from './components/contact-form/contact-form.component';
 import { ActivityFormComponent } from './components/activity-form/activity-form.component';
+import { ChipModule } from 'primeng/chip';
 
 
 
@@ -66,7 +67,8 @@ import { ActivityFormComponent } from './components/activity-form/activity-form.
     InputTextModule,
     InputNumberModule,
     DropdownModule,
-    ToolbarModule
+    ToolbarModule,
+    ChipModule
   ],
   providers: [
     ContactService,

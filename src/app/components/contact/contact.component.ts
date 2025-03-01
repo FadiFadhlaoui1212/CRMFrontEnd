@@ -523,6 +523,7 @@ ngOnInit() {
       for (let c of this.contacts){
         c.user.fullname = c.user.firstname + c.user.lastname;
       }
+      localStorage.setItem('contacts', JSON.stringify(this.contacts));
     },
     error => {
       console.log("error has occured"+error);

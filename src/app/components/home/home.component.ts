@@ -33,6 +33,10 @@ export class HomeComponent implements OnInit {
     this.ContactDialogVisible = true;
   }
 
+  navigateToActivityForm(){
+    this.router.navigate(['/activity-form']);
+  }
+
   logout(){
     localStorage.removeItem("authToken");
     this.router.navigate(['/login']);
